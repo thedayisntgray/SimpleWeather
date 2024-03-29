@@ -12,6 +12,7 @@ class WeatherForecastsController < ApplicationController
   end
 
   private
+
   def weather_forecast_params
     params.require(:weather_forecast).permit(:address)
   end
