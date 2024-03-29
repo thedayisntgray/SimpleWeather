@@ -1,0 +1,12 @@
+<h1>Get WeatherForecast For Address</h1>
+
+<%= form_with model: @weather_forecast do |form| %>
+  <div>
+    <%= form.label :address %><br>
+    <%= form.text_field :address %>
+  </div>
+
+  <div>
+    <%= form.submit %>
+  </div>
+<% end %>
