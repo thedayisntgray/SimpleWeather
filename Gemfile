@@ -39,6 +39,7 @@ group :development, :test do
   gem "rspec-rails"
   gem "capybara"
   gem "selenium-webdriver"
+  gem "webmock"
   gem "dotenv"
 end
 
