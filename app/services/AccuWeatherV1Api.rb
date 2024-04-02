@@ -10,8 +10,8 @@ class AccuWeatherV1Api
 
   def weather_for_zipcode(zip_code)
     uri = URI("#{API_ENDPOINT}/locations/v1/search")
-    params = {q: zip_code, apikey: @api_key}
 
+    params = {q: zip_code, apikey: @api_key}
     uri.query = URI.encode_www_form(params)
     response = Net::HTTP.get_response(uri)
 

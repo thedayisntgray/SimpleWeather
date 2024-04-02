@@ -1,17 +1,25 @@
 <h1>Get WeatherForecast For Address</h1>
 
-<%= form_with model: @weather_forecast do |form| %>
+<% if @weather_forecast.errors.any? %>
+  <div id="error_explanation">
+      <% @weather_forecast.errors.each do |error| %>
+        <li><%= error.full_message %></li>
+      <% end %>
+  </div>
+  <br>
+<% end %>
+
+<%= form_with model: @weather_forecast, data: { turbo: false } do |form| %>
   <div>
 
     <%= form.label :street%><br>
     <%= form.text_field :street %>
+    
     <br>
-
     <%= form.label :city%><br>
     <%= form.text_field :city%>
 
     <br>
-
     <%= form.label :state%><br>
     <%= form.text_field :state%>
 
@@ -19,8 +27,6 @@
     <%= form.label :zip %><br>
     <%= form.text_field :zip %>
   </div>
-
-  <br>
 
   <div>
     <%= form.submit %>
