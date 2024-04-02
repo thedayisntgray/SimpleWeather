@@ -17,6 +17,7 @@ class AccuWeatherV1Api
 
     case response
     when Net::HTTPSuccess
+      byebug
       JSON.parse(response.body)
     else
       {error: "Request failed with status #{response.code}"}
