@@ -11,8 +11,12 @@ class WeatherForecastsController < ApplicationController
     if @weather_forecast.invalid? && @weather_forecast.errors.any?
       render :new
     else
-      redirect_to @weather_forecast
+      render :show
     end
+  end
+
+  def show
+
   end
 
   private
