@@ -1,3 +1,9 @@
 Show page
 
+Weather for <%= weather_forecast[:location] %>
+<br>
+High <%= weather_forecast[:high] %>
+<br>
+Low  <%= weather_forecast[:low] %>
+
 <%= button_to "Back To Address Submission", root_path, method: :get,  class: "button" %>
