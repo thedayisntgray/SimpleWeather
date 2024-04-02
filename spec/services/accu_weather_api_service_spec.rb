@@ -16,7 +16,7 @@ RSpec.describe AccuWeatherV1Api do
         .with(query: {q: zip_code, apikey: "an-api-key"})
         .to_return(status: 200, body: '[{"Key": "12345"}]', headers: {"Content-Type" => "application/json"})
 
-      expect(api.weather_for_zipcode(zip_code)).to eq([{"Key" => "12345"}])
+      expect(api.weather_for_zipcode(zip_code)).to eq([{"Key" => zip_code}])
     end
   end
 end
