@@ -11,8 +11,11 @@ class WeatherForecastsController < ApplicationController
     if @weather_forecast.invalid?
       render :new
     else
-      weather_forecast = fetch_weather_forecast(weather_forecast_params[:zip])
-      render :show, locals: {weather_forecast: weather_forecast}
+      zip = weather_forecast_params[:zip]
+      weather_cached = weather_cached?(zip)
+      weather_forecast = fetch_weather_forecast(zip)
+
+      render :show, locals: {weather_forecast: weather_forecast, weather_cached: weather_cached}
     end
   end
 
@@ -20,6 +23,10 @@ class WeatherForecastsController < ApplicationController
   end
 
   private
+
+  def weather_cached?(zip)
+    Rails.cache.exist?("weather_forecast_#{zip}")
+  end
 
   def fetch_weather_forecast(zip)
     location = get_location(zip)
@@ -46,7 +53,6 @@ class WeatherForecastsController < ApplicationController
   end
 
   def get_one_day_forecast(key)
-    puts "This isn't cached!!!!!!!"
     accu_service = AccuWeatherV1Api.new
     one_day_forecast = accu_service.get_1_day_forecast(key)
     one_day_forecast.dig("DailyForecasts", 0, "Temperature")

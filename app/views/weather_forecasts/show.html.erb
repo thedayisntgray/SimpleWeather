@@ -1,9 +1,12 @@
-Show page
-
 Weather for <%= weather_forecast[:location] %>
 <br>
 High <%= weather_forecast[:high] %>
 <br>
 Low  <%= weather_forecast[:low] %>
+
+<br>
+<% if weather_cached %>
+  This data was cached and was collected within the last 30 minutes
+<% end %>
 
 <%= button_to "Back To Address Submission", root_path, method: :get,  class: "button" %>
