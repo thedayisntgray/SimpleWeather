@@ -41,7 +41,7 @@ class WeatherForecastsController < ApplicationController
 
     localized_name = location.dig("LocalizedName")
 
-    weather_forecast = Rails.cache.fetch("weather_forecast_#{zip}", expires_in: 1.minutes) do
+    Rails.cache.fetch("weather_forecast_#{zip}", expires_in: 1.minutes) do
       one_day_temp = get_one_day_forecast(location.dig("Key"))
       if one_day_temp.is_a?(Hash) && one_day_temp&.key?(:error)
         return one_day_temp
@@ -72,7 +72,7 @@ class WeatherForecastsController < ApplicationController
 
   def get_one_day_forecast(key)
     accu_service = AccuWeatherV1Api.new
-    one_day_forecast = accu_service.get_1_day_forecast(key)
+    accu_service.get_1_day_forecast(key)
   end
 
   def get_us_location(parsed_json)
