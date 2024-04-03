@@ -22,7 +22,7 @@ Sure thing!
 
 - Sign up for an AccuWeather Account.
 - Create a .env file in the project root directory
-- Populate that file with the key you recieved from Accuweather and place it in the .env. It should look like so: ACCU_WEATHER_API_KEY=your_api_key_here
+- Populate that file with the key you recieved from Accuweather and place it in the .env. It should look like so: ```ACCU_WEATHER_API_KEY=your_api_key_here```
 - Run ```bundle install```
 - Run ```rails s```
 
