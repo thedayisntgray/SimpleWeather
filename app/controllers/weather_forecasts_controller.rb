@@ -15,7 +15,7 @@ class WeatherForecastsController < ApplicationController
       weather_cached = weather_cached?(zip)
       weather_forecast = fetch_weather_forecast(zip)
 
-      if weather_forecast.is_a?(Hash) && weather_forecast&.key?(:error)
+      if is_error_message?(weather_forecast)
         render :error, locals: {error: weather_forecast[:error]}
       else
         render :show, locals: {weather_forecast: weather_forecast, weather_cached: weather_cached}
@@ -37,13 +37,13 @@ class WeatherForecastsController < ApplicationController
 
   def fetch_weather_forecast(zip)
     location = get_location(zip)
-    return location if location.is_a?(Hash) && location&.key?(:error)
+    return location if is_error_message?(location)
 
     localized_name = location.dig("LocalizedName")
 
-    Rails.cache.fetch("weather_forecast_#{zip}", expires_in: 1.minutes) do
+    Rails.cache.fetch("weather_forecast_#{zip}", expires_in: 30.minutes) do
       one_day_temp = get_one_day_forecast(location.dig("Key"))
-      if one_day_temp.is_a?(Hash) && one_day_temp&.key?(:error)
+      if is_error_message?(one_day_temp)
         return one_day_temp
       else
         {
@@ -53,6 +53,10 @@ class WeatherForecastsController < ApplicationController
         }
       end
     end
+  end
+
+  def is_error_message?(request_message)
+    request_message.is_a?(Hash) && request_message&.key?(:error)
   end
 
   def format_temperature(temperature)
