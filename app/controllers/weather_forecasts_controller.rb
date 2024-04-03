@@ -15,11 +15,18 @@ class WeatherForecastsController < ApplicationController
       weather_cached = weather_cached?(zip)
       weather_forecast = fetch_weather_forecast(zip)
 
-      render :show, locals: {weather_forecast: weather_forecast, weather_cached: weather_cached}
+      if weather_forecast.is_a?(Hash) && weather_forecast&.key?(:error)
+        render :error, locals: {error: weather_forecast[:error]}
+      else
+        render :show, locals: {weather_forecast: weather_forecast, weather_cached: weather_cached}
+      end
     end
   end
 
   def show
+  end
+
+  def error
   end
 
   private
@@ -30,15 +37,21 @@ class WeatherForecastsController < ApplicationController
 
   def fetch_weather_forecast(zip)
     location = get_location(zip)
+    return location if location.is_a?(Hash) && location&.key?(:error)
+
     localized_name = location.dig("LocalizedName")
 
     weather_forecast = Rails.cache.fetch("weather_forecast_#{zip}", expires_in: 1.minutes) do
       one_day_temp = get_one_day_forecast(location.dig("Key"))
-      {
-        location: localized_name,
-        high: format_temperature(one_day_temp["Maximum"]),
-        low: format_temperature(one_day_temp["Minimum"])
-      }
+      if one_day_temp.is_a?(Hash) && one_day_temp&.key?(:error)
+        return one_day_temp
+      else
+        {
+          location: localized_name,
+          high: format_temperature(one_day_temp.dig("DailyForecasts", 0, "Temperature", "Maximum")),
+          low: format_temperature(one_day_temp.dig("DailyForecasts", 0, "Temperature", "Minimum"))
+        }
+      end
     end
   end
 
@@ -48,14 +61,18 @@ class WeatherForecastsController < ApplicationController
 
   def get_location(zip)
     accu_service = AccuWeatherV1Api.new
-    result = accu_service.weather_for_zipcode(zip)
-    get_us_location(result)
+    parsed_json = accu_service.weather_for_zipcode(zip)
+
+    if parsed_json.is_a?(Hash) && parsed_json&.key?(:error)
+      parsed_json
+    else
+      get_us_location(parsed_json)
+    end
   end
 
   def get_one_day_forecast(key)
     accu_service = AccuWeatherV1Api.new
     one_day_forecast = accu_service.get_1_day_forecast(key)
-    one_day_forecast.dig("DailyForecasts", 0, "Temperature")
   end
 
   def get_us_location(parsed_json)

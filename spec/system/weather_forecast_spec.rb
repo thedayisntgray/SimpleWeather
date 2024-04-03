@@ -49,7 +49,6 @@ describe "Address submission", type: :feature do
 
     click_button "Create Weather forecast"
 
-    expect(page).to have_content "Show page"
     expect(page).to have_content "Low 42F"
     expect(page).to have_content "High 46F"
     expect(page).to have_button("Back To Address Submission")

@@ -18,8 +18,11 @@ class AccuWeatherV1Api
     case response
     when Net::HTTPSuccess
       JSON.parse(response.body)
+    when Net::HTTPServiceUnavailable
+      parsed_body = JSON.parse(response.body)
+      {error: parsed_body["Message"]}
     else
-      {error: "Request failed with status #{response.code}"}
+      {error: "An error occured, please contact the administrator at test@test.com"}
     end
   end
 
@@ -33,8 +36,11 @@ class AccuWeatherV1Api
     case response
     when Net::HTTPSuccess
       JSON.parse(response.body)
+    when Net::HTTPServiceUnavailable
+      parsed_body = JSON.parse(response.body)
+      {error: parsed_body["Message"]}
     else
-      {error: "Request failed with status #{response.code}"}
+      {error: "An error occured, please contact the administrator at test@test.com"}
     end
   end
 end
