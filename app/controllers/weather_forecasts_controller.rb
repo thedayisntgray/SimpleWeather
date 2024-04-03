@@ -29,7 +29,7 @@ class WeatherForecastsController < ApplicationController
     {
       location: localized_name,
       high: format_temperature(one_day_temp["Maximum"]),
-      min: format_temperature(one_day_temp["Minimum"])
+      low: format_temperature(one_day_temp["Minimum"])
     }
   end
 
