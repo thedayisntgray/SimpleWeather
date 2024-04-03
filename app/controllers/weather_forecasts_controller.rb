@@ -25,12 +25,14 @@ class WeatherForecastsController < ApplicationController
     location = get_location(zip)
     localized_name = location.dig("LocalizedName")
 
-    one_day_temp = get_one_day_forecast(location.dig("Key"))
-    {
-      location: localized_name,
-      high: format_temperature(one_day_temp["Maximum"]),
-      low: format_temperature(one_day_temp["Minimum"])
-    }
+    weather_forecast = Rails.cache.fetch("weather_forecast_#{zip}", expires_in: 1.minutes) do
+      one_day_temp = get_one_day_forecast(location.dig("Key"))
+      {
+        location: localized_name,
+        high: format_temperature(one_day_temp["Maximum"]),
+        low: format_temperature(one_day_temp["Minimum"])
+      }
+    end
   end
 
   def format_temperature(temperature)
@@ -44,6 +46,7 @@ class WeatherForecastsController < ApplicationController
   end
 
   def get_one_day_forecast(key)
+    puts "This isn't cached!!!!!!!"
     accu_service = AccuWeatherV1Api.new
     one_day_forecast = accu_service.get_1_day_forecast(key)
     one_day_forecast.dig("DailyForecasts", 0, "Temperature")

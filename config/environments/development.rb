@@ -11,6 +11,8 @@ Rails.application.configure do
   # Do not eager load code on boot.
   config.eager_load = false
 
+  config.cache_store = :memory_store
+
   # Show full error reports.
   config.consider_all_requests_local = true
 
