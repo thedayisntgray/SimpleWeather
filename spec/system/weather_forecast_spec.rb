@@ -19,14 +19,6 @@ describe "Address submission", type: :feature do
         ].to_json, headers: {})
 
     stub_request(:get, "http://dataservice.accuweather.com/forecasts/v1/daily/1day/5689_PC?apikey=#{api_key}")
-      .with(
-        headers: {
-          "Accept" => "*/*",
-          "Accept-Encoding" => "gzip;q=1.0,deflate;q=0.6,identity;q=0.3",
-          "Host" => "dataservice.accuweather.com",
-          "User-Agent" => "Ruby"
-        }
-      )
       .to_return(status: 200,
         body:
          {
